@@ -34,7 +34,7 @@ class setframe(tkinter.Frame):
             try:
                 self.master.connection.state = "close"
                 self.master.connection.close()
-                self.button_open.configure(bg = "white",text="open")                
+                self.button_open.configure(bg = "white",text="open")
             except:
                 print("error: port can't close.")
 
@@ -51,6 +51,8 @@ class mainframe(tkinter.Frame):
     def addwidget(self):
         self.text = tkinter.Text(self)
         self.text.pack()
+        self.text.tag_config("in", foreground="blue")
+        self.text.tag_config("out", foreground="red")
         self.control = setframe(self)
         self.control.pack()
         self.text.bind("<Return>",self.KeyEnter)
@@ -59,7 +61,7 @@ class mainframe(tkinter.Frame):
         #print(self.text.get("1.0",'end-1c'))
         try:
             msg = self.connection.send(self.text.get("insert linestart",'end-1c'))
-            self.text.insert("end+1c","\n"+str(msg))
+            #self.text.insert("end+1c","\n"+str(msg))
         except:
             print("error: send.")
 

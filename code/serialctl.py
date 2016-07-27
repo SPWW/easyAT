@@ -26,7 +26,8 @@ class com_port(object):
                 cm = cm.replace("\r","<CR>")
                 cm = cm.replace("\n","<CN>\n")
                 if self.text_board is not None:
-                    self.text_board.insert("end+1c",str(cm))
+                    self.text_board.insert("end+1c",str(cm),"out")
+                    self.text_board.see("end")
                     #"\n"+str(cm)
 
     def open(self,port='COM4',baudrate=115200):
