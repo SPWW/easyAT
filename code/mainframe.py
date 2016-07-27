@@ -7,7 +7,7 @@ class setframe(tkinter.Frame):
         tkinter.Frame.__init__(self,arg)
         self.pack()
         self.addwidget()
-        self.master.connection = serialctl.com_port()
+        self.master.connection = serialctl.com_port(self.master.text)
 
     def addwidget(self):
         self.entry_com = tkinter.Entry(self)
@@ -32,9 +32,9 @@ class setframe(tkinter.Frame):
                 print("error: port can't open.")
         else:
             try:
-                self.master.connection.close()
-                self.button_open.configure(bg = "white",text="open")
                 self.master.connection.state = "close"
+                self.master.connection.close()
+                self.button_open.configure(bg = "white",text="open")                
             except:
                 print("error: port can't close.")
 
