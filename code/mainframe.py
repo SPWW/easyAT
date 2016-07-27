@@ -7,6 +7,7 @@ class setframe(tkinter.Frame):
         tkinter.Frame.__init__(self,arg)
         self.pack()
         self.addwidget()
+        self.master.connection = serialctl.com_port()
 
     def addwidget(self):
         self.entry_com = tkinter.Entry(self)
@@ -18,11 +19,24 @@ class setframe(tkinter.Frame):
         self.button_open = tkinter.Button(self,text="open",command=self.open)
         self.button_open.pack(side=tkinter.LEFT)
 
+
     def open(self):
         com_number = self.entry_com.get() or "COM4"
         frequency = self.entry_fre.get() or 115200
-        self.master.connection = serialctl.com_port()
-        self.master.connection.open(com_number,frequency)
+        if self.master.connection.state == "close":
+            try:
+                self.master.connection.open(com_number,frequency)
+                self.button_open.configure(bg = "red",text="close")
+                self.master.connection.state = "open"
+            except:
+                print("error: port can't open.")
+        else:
+            try:
+                self.master.connection.close()
+                self.button_open.configure(bg = "white",text="open")
+                self.master.connection.state = "close"
+            except:
+                print("error: port can't close.")
 
 
 
@@ -43,8 +57,11 @@ class mainframe(tkinter.Frame):
 
     def KeyEnter(self,event):
         #print(self.text.get("1.0",'end-1c'))
-        msg = self.connection.send(self.text.get("insert linestart",'end-1c'))
-        self.text.insert("end+1c","\n"+str(msg))
+        try:
+            msg = self.connection.send(self.text.get("insert linestart",'end-1c'))
+            self.text.insert("end+1c","\n"+str(msg))
+        except:
+            print("error: send.")
 
 
 

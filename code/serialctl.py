@@ -8,9 +8,12 @@ class com_port(object):
         self.rtscts=False
         self.dsrdtr=False
         self.bytesize=8
+        self.state = "close"
 
     def open(self,port='COM4',baudrate=115200):
         self.connection = serial.Serial(port, baudrate, self.bytesize, self.parity, self.stopbits, self.timeout, self.rtscts, self.dsrdtr)
+
+
 
     def close(self):
         self.connection.close()
