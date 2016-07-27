@@ -12,6 +12,11 @@ class com_port(object):
         self.state = "close"
         self.text_board = board
         self.t = None
+        try:
+            self.t=threading.Thread(target=self.listing)
+            self.t.start()
+        except:
+            print "unable to start thread."
 
     def listing(self):
         while True:
@@ -26,11 +31,7 @@ class com_port(object):
 
     def open(self,port='COM4',baudrate=115200):
         self.connection = serial.Serial(port, baudrate, self.bytesize, self.parity, self.stopbits, self.timeout, self.rtscts, self.dsrdtr)
-        try:
-            self.t=threading.Thread(target=self.listing)
-            self.t.start()
-        except:
-            print "unable to start thread."
+
 
     def close(self):
         self.connection.close()
