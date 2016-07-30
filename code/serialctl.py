@@ -12,14 +12,16 @@ class com_port(object):
         self.state = "close"
         self.text_board = board
         self.t = None
+        self.run = True
         try:
+            print "open listen"
             self.t=threading.Thread(target=self.listing)
             self.t.start()
         except:
             print "unable to start thread."
 
     def listing(self):
-        while True:
+        while self.run:
             if self.state == "open":
                 msg = self.connection.read(200)
                 cm = msg
@@ -51,4 +53,7 @@ class com_port(object):
         return ""
 
     def __del__(self):
-        self.t.join()
+        self.t.terminate()
+
+    def stop(self):
+        self.run = False

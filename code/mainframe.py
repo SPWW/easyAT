@@ -49,6 +49,7 @@ class mainframe(tkinter.Frame):
         tkinter.Frame.__init__(self,arg)
         self.pack()
         self.addwidget()
+        self.master.protocol('WM_DELETE_WINDOW', self.WinClose)  # root is your root window
 
     def addwidget(self):
         self.text = tkinter.Text(self)
@@ -58,6 +59,7 @@ class mainframe(tkinter.Frame):
         self.control = setframe(self)
         self.control.pack()
         self.text.bind("<Return>",self.KeyEnter)
+        self.text.bind("<Tab>",self.KeyHandleTab)
         self.newtop =tkinter.Toplevel(self.master,width=150)
         self.newtop.overrideredirect(True)
         self.popwin = popup.popup(self.newtop)
@@ -87,13 +89,32 @@ class mainframe(tkinter.Frame):
         #print(self.text.get("1.0",'end-1c'))
         try:
             command = self.text.get("insert linestart",'end-1c')
-            #msg = self.connection.send(self.text.get("insert linestart",'end-1c'))
+            msg = self.connection.send(self.text.get("insert linestart",'end-1c'))
             #self.text.insert("end+1c","\n"+str(msg))
+        except:
+            print("error: send.")
+
+    def KeyHandleTab(self,event):
+        try:
+            command = self.text.get("insert linestart",'end-1c')
             geo = self.GetCurserLoc()
             print geo
             self.popwin.Show(command,geo)
+            return 'break'
         except:
             print("error: send.")
+
+    def quit(self):
+        print " quit "
+        self.destroy()
+
+    def WinClose(self):
+        # check if saving
+        # if not:
+        print("winclose")
+        #stop connection listening
+        self.connection.stop()
+        self.master.destroy()
 
 
 
