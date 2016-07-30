@@ -1,6 +1,8 @@
 #for python2.7
+# -*- coding: UTF-8 -*-
 import Tkinter as tkinter
 import serialctl
+import popup
 
 class setframe(tkinter.Frame):
     def __init__(self,arg=None):
@@ -56,12 +58,40 @@ class mainframe(tkinter.Frame):
         self.control = setframe(self)
         self.control.pack()
         self.text.bind("<Return>",self.KeyEnter)
+        self.newtop =tkinter.Toplevel(self.master,width=150)
+        self.newtop.overrideredirect(True)
+        self.popwin = popup.popup(self.newtop)
+        self.popwin.Hide()
+        #self.popwin.Show('王')
+
+    def GetCurserLoc(self):
+        w = self.text
+        # Get the Text widget's current location
+        pos_x, pos_y = w.winfo_rootx(), w.winfo_rooty()
+        # Get the bounding box of the insertion cursor
+        cursor = tkinter.INSERT
+        bbox = w.bbox(cursor)
+        if bbox is None:
+            print('Cursor is not currently visible. Scrolling...')
+            w.see(cursor)
+            bbox = w.bbox(cursor)
+        bb_x, bb_y, bb_w, bb_h = bbox
+        ox = pos_x + bb_x
+        oy = pos_y + bb_y + bb_h
+        s = 'Cursor: (%d, %d)' % (ox, oy)
+        print(s)
+        geo = (200, 400, ox, oy)
+        return geo
 
     def KeyEnter(self,event):
         #print(self.text.get("1.0",'end-1c'))
         try:
-            msg = self.connection.send(self.text.get("insert linestart",'end-1c'))
+            command = self.text.get("insert linestart",'end-1c')
+            #msg = self.connection.send(self.text.get("insert linestart",'end-1c'))
             #self.text.insert("end+1c","\n"+str(msg))
+            geo = self.GetCurserLoc()
+            print geo
+            self.popwin.Show(command,geo)
         except:
             print("error: send.")
 

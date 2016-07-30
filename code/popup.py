@@ -19,16 +19,24 @@ class popup(tkinter.Frame):
 
     def FetchDate(self,text):
         # Do this instead
-        t = (text,)
         self.__cursor.execute('SELECT name FROM members WHERE name LIKE \''+text+'%\' LIMIT 5')
         return self.__cursor.fetchall()
 
-    def Show(self,text):
+    def Show(self,text,geo):
         for item in self.FetchDate(text):
             print item
             self.list.insert(tkinter.END,item)
         #self.list.pack()
+        try:
+            self.master.geometry('%dx%d+%d+%d' % geo)
+            self.master.update()
+            self.master.deiconify()
+        except:
+            print "wront"
         print "show over"
+
+    def Hide(self):
+        self.master.withdraw()
 
 
     def __del__(self):
@@ -39,8 +47,7 @@ class popup(tkinter.Frame):
 
 if __name__ == "__main__":
     app = popup()
-    app.Show("王")
-    app.Show("李")
+    app.Show("t")
     app.mainloop()
 
 

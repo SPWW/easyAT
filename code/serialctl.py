@@ -49,3 +49,6 @@ class com_port(object):
 #        cm = cm.replace("\n","<CN>\n")
 #        print cm
         return ""
+
+    def __del__(self):
+        self.t.join()
